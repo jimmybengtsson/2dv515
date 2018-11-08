@@ -2,8 +2,8 @@
 
 module.exports = (app) => {
 
-  let users = require('../controllers/GenerateUsers');
-  let items = require('../controllers/GenerateItems');
+  let users = require('../controllers/UserBased');
+  let items = require('../controllers/ItemBased');
 
   app.route('/users')
     .get(users.GetUsers);
@@ -12,7 +12,7 @@ module.exports = (app) => {
     .post(users.Euclidean);
 
   app.route('/users/pearson')
-    .get(users.Pearson);
+    .post(users.Pearson);
 
   app.route('/ratings')
     .get(items.GetRatings);

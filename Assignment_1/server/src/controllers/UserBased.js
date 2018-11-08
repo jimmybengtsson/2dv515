@@ -32,7 +32,7 @@ exports.Euclidean = (req, res) => {
 
           let tempObj = {
             UserID: usersCsv[i].UserID,
-            Euclidean: euclidean,
+            Euclidean: +euclidean.toFixed(3),
           };
 
           if (euclidean !== 0) {
@@ -57,13 +57,42 @@ exports.Euclidean = (req, res) => {
 
 exports.Pearson = (req, res) => {
 
-  return new Promise((resolve, reject) => {
+  fetchCSV.users().then((usersCsv) => {
 
-    /*if (err) {
-      reject(err);
-    }*/
+    let user = req.body.UserID;
+    let pearsonArr = [];
 
-    console.log('Pearson');
-    resolve(res.json({ message: 'Pearson', }));
+    fetchCSV.ratings().then((ratingsCsv) => {
+
+      console.log(usersCsv);
+
+      for (let i = 0; i < usersCsv.length; i++) {
+
+        if (usersCsv[i].UserID !== user) {
+
+          let pearson = algorithms.Pearson(user, usersCsv[i].UserID, ratingsCsv);
+
+          let tempObj = {
+            UserID: usersCsv[i].UserID,
+            Pearson: +pearson.toFixed(3),
+          };
+
+          if (pearson !== 0) {
+            pearsonArr.push(tempObj);
+          }
+        }
+      }
+
+      if (pearsonArr <= 0) {
+        return res.status(404).json({ message: 'No Pearson matches', });
+      }
+
+      console.log(pearsonArr);
+
+      return res.json({ Pearson: pearsonArr });
+    });
+  }).catch((err) => {
+    return res.status(500).json({ message: 'Something went wrong. Please try again!', data: err });
   });
+
 };
