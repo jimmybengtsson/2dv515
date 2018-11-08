@@ -1,8 +1,8 @@
-let fetchRatings = require('./FetchCSV');
+let fetchCSV = require('./FetchCSV');
 
 exports.GetRatings = (req, res) => {
 
-  fetchRatings.ratings().then((data, err) => {
+  fetchCSV.ratings().then((data, err) => {
     if (err) {
       return res.status(500).json({ message: 'Server failed. Please try again!' });
     }

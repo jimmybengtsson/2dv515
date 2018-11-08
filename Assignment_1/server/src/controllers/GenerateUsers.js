@@ -1,8 +1,9 @@
-let fetchUsers = require('./FetchCSV');
+let fetchCSV = require('./FetchCSV');
+let algorithms = require('./Algorithms');
 
 exports.GetUsers = (req, res) => {
 
-  fetchUsers.users().then((data, err) => {
+  fetchCSV.users().then((data, err) => {
     if (err) {
       return res.status(500).json({ message: 'Server failed. Please try again!' });
     }
@@ -14,15 +15,42 @@ exports.GetUsers = (req, res) => {
 
 exports.Euclidean = (req, res) => {
 
-  return new Promise((resolve, reject) => {
+  fetchCSV.users().then((usersCsv) => {
 
-      /*if (err) {
-        reject(err);
-      }*/
+    let user = req.body.UserID;
+    let euclideanArr = [];
 
-      console.log('Euclidean');
-      resolve(res.json({ message: 'Euclidean', }));
+    fetchCSV.ratings().then((ratingsCsv) => {
+
+      console.log(usersCsv);
+
+      for (let i = 0; i < usersCsv.length; i++) {
+
+        if (usersCsv[i].UserID !== user) {
+
+          let euclidean = algorithms.Euclidean(user, usersCsv[i].UserID, ratingsCsv);
+
+          let tempObj = {
+            UserID: usersCsv[i].UserID,
+            Euclidean: euclidean,
+          };
+
+          if (euclidean !== 0) {
+            euclideanArr.push(tempObj);
+          }
+        }
+      }
+
+      if (euclideanArr <= 0) {
+        return res.status(404).json({ message: 'No Euclidean matches', });
+      }
+
+      return res.json({ Euclidean: euclideanArr });
     });
+  }).catch((err) => {
+    return res.status(500).json({ message: 'Something went wrong. Please try again!', data: err });
+  });
+
 };
 
 exports.Pearson = (req, res) => {

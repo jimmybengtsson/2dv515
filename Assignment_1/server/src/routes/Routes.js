@@ -9,7 +9,7 @@ module.exports = (app) => {
     .get(users.GetUsers);
 
   app.route('/users/euclidean')
-    .get(users.Euclidean);
+    .post(users.Euclidean);
 
   app.route('/users/pearson')
     .get(users.Pearson);

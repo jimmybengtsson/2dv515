@@ -1,5 +1,5 @@
 const neatCsv = require('neat-csv');
-let fs = require('fs');
+const fs = require('fs');
 let userCSV = './data/users.csv';
 let ratingCSV = './data/ratings.csv';
 
