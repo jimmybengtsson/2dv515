@@ -45,6 +45,8 @@ exports.Euclidean = (req, res) => {
         return res.status(404).json({ message: 'No Euclidean matches', });
       }
 
+      console.log(euclideanArr);
+
       return res.json({ Euclidean: euclideanArr });
     });
   }).catch((err) => {

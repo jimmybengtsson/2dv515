@@ -5,10 +5,8 @@ exports.Euclidean = (userA, userB, ratings) => {
 
   for (let i = 0; i < ratings.length; i++) {
     for (let j = 0; j < ratings.length; j++) {
-      if (ratings[i].UserID === userA && ratings[j].UserID === userB) {
-        let temp = (ratings[i].Rating - ratings[j].Rating)**2;
-        console.log(temp);
-        sim += temp;
+      if (ratings[i].UserID === userA && ratings[j].UserID === userB && ratings[i].Movie === ratings[j].Movie) {
+        sim += Math.pow(ratings[i].Rating - ratings[j].Rating, 2);
         n += 1;
       }
     }
@@ -18,5 +16,6 @@ exports.Euclidean = (userA, userB, ratings) => {
     return 0;
   }
 
+  console.log(sim);
   return 1 / (1 + sim);
 };
