@@ -1,25 +1,41 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Menu from './components/Menu';
+import Results from './components/Results';
 
 class App extends Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      users: false,
+      ratings: false,
+      euclidean: false,
+      pearson: false,
+      results: false,
+    }
+
+  }
+
+  changeState = name => event => {
+    this.setState({
+      [name]: event.target.value
+    })
+  };
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+          <h3>
+            Recommendation System
+          </h3>
         </header>
+        <div className="App-body">
+          <Menu state={this.state} changeState={this.changeState}/>
+          <Results state={this.state} changeState={this.changeState}/>
+        </div>
       </div>
     );
   }

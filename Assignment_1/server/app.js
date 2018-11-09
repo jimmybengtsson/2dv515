@@ -8,6 +8,7 @@ let app = express();
 let port = process.env.PORT || 8000;
 
 app.use(bodyParser.json());
+app.use(cors());
 
 let routes = require('./src/routes/Routes.js');
 
