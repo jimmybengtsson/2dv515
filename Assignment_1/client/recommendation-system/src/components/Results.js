@@ -69,7 +69,27 @@ class Results extends Component {
 
     let stopTime = new Date();
     let executionTime = stopTime - this.props.state.startTime;
-    console.log(executionTime);
+
+    let timeObj = {
+      measure: this.state.measure,
+      time: executionTime,
+      user: this.props.state.user,
+    }
+
+    let storage;
+
+    if (localStorage.getItem('TimeResults')) {
+      storage = JSON.parse(localStorage.getItem('TimeResults'));
+    } else {
+      storage = [];
+    }
+
+    storage.push(timeObj);
+
+    localStorage.setItem('TimeResults', JSON.stringify(storage));
+
+    console.log(storage)
+
     return (
       <div>
         <p>Top three matches for {this.props.state.user} ({this.state.measure})</p>
