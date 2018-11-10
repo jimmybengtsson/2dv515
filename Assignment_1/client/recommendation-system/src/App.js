@@ -18,6 +18,7 @@ class App extends Component {
   }
 
   changeStateMenu = data => {
+
     this.setState({
       userID: data.userID,
       user: data.user,
@@ -25,6 +26,7 @@ class App extends Component {
       measureID: data.measureID,
       menuOpen: false,
       resultOpen: true,
+      startTime: new Date()
     })
   };
 

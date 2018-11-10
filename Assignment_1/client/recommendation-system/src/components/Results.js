@@ -7,6 +7,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import '../App.css';
+const perf = require('execution-time')();
 
 class Results extends Component {
   constructor (props) {
@@ -66,6 +67,9 @@ class Results extends Component {
 
     let movieArr = this.state.result.movies;
 
+    let stopTime = new Date();
+    let executionTime = stopTime - this.props.state.startTime;
+    console.log(executionTime);
     return (
       <div>
         <p>Top three matches for {this.props.state.user} ({this.state.measure})</p>
@@ -115,6 +119,7 @@ class Results extends Component {
             })}
           </TableBody>
         </Table>
+        <p>Execution time: {executionTime}ms</p>
       </div>
     );
   }
