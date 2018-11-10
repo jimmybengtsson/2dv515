@@ -24,8 +24,8 @@ class Results extends Component {
       case 1:
         getEuclidean(this.props.state.userID).then(result => {
           this.setState({
-            result: result.data.score,
-            measure: 'User-based Euclidean'
+            result: result.data,
+            measure: 'Euclidean'
           })
         }).catch(err => {
           console.log(err);
@@ -34,8 +34,8 @@ class Results extends Component {
       case 2:
         getPearson(this.props.state.userID).then(result => {
           this.setState({
-            result: result.data.score,
-            measure: 'User-based Pearson'
+            result: result.data,
+            measure: 'Pearson'
           })
         }).catch(err => {
           console.log(err);
@@ -48,45 +48,74 @@ class Results extends Component {
 
   renderResult = () => {
 
-    let resultArr = [];
+    let userArr = [];
     console.log(this.state.result)
 
-    for (let i in this.state.result) {
+    for (let i in this.state.result.users) {
       for (let j in this.props.state.users) {
-        if (this.props.state.users[j].UserID === this.state.result[i].UserID) {
+        if (this.props.state.users[j].UserID === this.state.result.users[i].UserID) {
           let tempObj = {
             user: this.props.state.users[j].UserName,
-            score: this.state.result[i].score,
+            score: this.state.result.users[i].score,
             position: Number(i) + 1,
           }
-          resultArr.push(tempObj)
+          userArr.push(tempObj)
         }
       }
     }
 
+    let movieArr = this.state.result.movies;
+
     return (
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell numeric> </TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell numeric>Score</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {resultArr.map(row => {
-            return (
-              <TableRow key={row.id}>
-                <TableCell numericcomponent="th" scope="row">
-                  {row.position}
-                </TableCell>
-                <TableCell>{row.user}</TableCell>
-                <TableCell numeric>{row.score}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+      <div>
+        <p>Top three matches for {this.props.state.user} ({this.state.measure})</p>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell numeric> </TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell numeric>Score</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {userArr.map(row => {
+              return (
+                <TableRow key={row.id}>
+                  <TableCell numericcomponent="th" scope="row">
+                    {row.position}
+                  </TableCell>
+                  <TableCell>{row.user}</TableCell>
+                  <TableCell numeric>{row.score}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+        <br/>
+        <p>Top three recommendations for {this.props.state.user} ({this.state.measure})</p>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell numeric> </TableCell>
+              <TableCell>Movie</TableCell>
+              <TableCell numeric>Score</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {movieArr.map((row, index) => {
+              return (
+                <TableRow key={row.id}>
+                  <TableCell numeric>
+                    {index + 1}
+                  </TableCell>
+                  <TableCell>{row.movie}</TableCell>
+                  <TableCell numeric>{row.score}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
     );
   }
 
@@ -100,7 +129,6 @@ class Results extends Component {
         <button className="Results-Close" aria-label="Close" onClick={() => {this.props.changeState()}}>
           X
         </button>
-        <p>{this.state.measure}</p>
           {this.state.result ? (
           <div>
             {this.renderResult()}
