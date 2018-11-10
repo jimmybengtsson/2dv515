@@ -5,6 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import '../App.css';
 
 import {getUsers} from '../utils/ApiRequests';
 
@@ -15,18 +16,18 @@ class Menu extends Component {
     this.state = {
       users: null,
       user: '',
-      correlation: null,
+      measure: '',
     }
 
     this.renderUserMenu = this.renderUserMenu.bind(this);
   }
 
-  handleChange = event => {
-    this.setState({ userID: event.target.value.UserID, user: event.target.value.UserName});
+  handleChange = (event) => {
+    this.setState({ userID: event.target.value.UserID, user: event.target.value.UserName.toString()});
   };
 
   handleChangeTwo = event => {
-    this.setState({ correlation: event.target.value });
+    this.setState({ measure: event.target.value.measure, measureID: event.target.value.measureID});
   };
 
   renderUserMenu = () => {
@@ -36,19 +37,22 @@ class Menu extends Component {
       menuItems.push(<MenuItem value={this.state.users[i]} >{this.state.users[i].UserName}</MenuItem>)
     }
 
-    const { anchorEl } = this.state;
     return (
       <div>
         {this.state.users ? (
           <div>
-            <FormControl style={{minWidth: 50}}>
-              <InputLabel  style={{minWidth: 50}} htmlFor="pick-user-simple">Pick a user</InputLabel>
+            <FormControl style={{minWidth: 150}}>
+              <InputLabel  style={{minWidth: 100}} htmlFor="pick-user-simple">Pick a user</InputLabel>
               <Select
-                style={{minWidth: 50}}
+                style={{minWidth: 100}}
                 value={this.state.user}
                 onChange={this.handleChange}
               >
-                {menuItems}
+                {this.state.users.map((item, index) => {
+                  return (
+                  <MenuItem value={item} >{item.UserName}</MenuItem>
+                  );
+                })}
               </Select>
             </FormControl>
           </div>
@@ -65,15 +69,25 @@ class Menu extends Component {
       <div>
         {this.state.users ? (
           <div>
-            <FormControl style={{minWidth: 50}}>
-              <InputLabel  style={{minWidth: 50}} htmlFor="pick-user-simple">Pick a pattern</InputLabel>
+            <FormControl style={{minWidth: 150}}>
+              <InputLabel  style={{minWidth: 100}} htmlFor="pick-user-simple">Similarity measure</InputLabel>
               <Select
-                style={{minWidth: 50}}
-                value={this.state.user}
+                style={{minWidth: 100}}
+                value={this.state.measure}
                 onChange={this.handleChangeTwo}
               >
-                <MenuItem value={1} >User-based Euclidean</MenuItem>
-                <MenuItem value={2} >User-based Pearson</MenuItem>
+                <MenuItem key={1}
+                          value={{
+                            measure: 'User - Euclidean Distance',
+                            measureID: 1
+                          }}
+                >User - Euclidean Distance</MenuItem>
+                <MenuItem key={2}
+                          value={{
+                            measure: 'User - Pearson Correlation',
+                            measureID: 2
+                          }}
+                >User - Pearson Correlation</MenuItem>
               </Select>
             </FormControl>
           </div>
@@ -83,6 +97,21 @@ class Menu extends Component {
       </div>
     );
   };
+
+  renderButton = () => {
+    if (!this.state.userID || !this.state.measure) {
+      return (
+        <Button style={{ marginTop: 40, width: 100, }} variant="contained"  disabled >
+          OK
+        </Button>
+      );
+    }
+    return (
+      <Button style={{ marginTop: 40, width: 100, }} variant="contained" onClick={() => { this.props.changeState(this.state) }}>
+        OK
+      </Button>
+    );
+  }
 
   componentWillMount = () => {
 
@@ -96,13 +125,13 @@ class Menu extends Component {
 
   render() {
     console.log(this.state)
-    const { anchorEl } = this.state;
     return (
       <div className="Menu">
         <div className="Menu-Body">
           {this.renderUserMenu()}
           {this.renderRecommendation()}
         </div>
+        {this.renderButton()}
       </div>
     );
   }

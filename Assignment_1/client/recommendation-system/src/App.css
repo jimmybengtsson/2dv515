@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  background-color: #282c34;
+  background-color: white;
   min-height: 100vh;
 }
 
@@ -10,18 +10,18 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: white;
   min-height: 10vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #282c34;
 }
 
 .App-body {
-  background-color: #282c34;
+  background-color: white;
   min-height: 90vh;
   max-width: 100vh;
   display: flex;
@@ -43,13 +43,32 @@
 }
 
 .Menu {
-  min-height: 30vh;
+  min-height: 15vh;
   max-width: 50vh;
   min-width: 40vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #e7e7e7;
+  background-color: white;
   align-self: center;
+}
+
+.Menu-Body {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  min-width: 100%;
+}
+
+.Results {
+
+}
+
+.Results-Close {
+  float: right;
+  max-width: 26px;
+  max-height: 26px;
+  border-radius: 13px;
 }

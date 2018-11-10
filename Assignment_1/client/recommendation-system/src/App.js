@@ -9,18 +9,32 @@ class App extends Component {
     super(props)
 
     this.state = {
-      users: false,
-      ratings: false,
-      euclidean: false,
-      pearson: false,
-      results: false,
+      userID: null,
+      user: null,
+      menuOpen: true,
+      resultOpen: false,
     }
 
   }
 
-  changeState = name => event => {
+  changeStateMenu = data => {
     this.setState({
-      [name]: event.target.value
+      userID: data.userID,
+      user: data.user,
+      users: data.users,
+      measureID: data.measureID,
+      menuOpen: false,
+      resultOpen: true,
+    })
+  };
+
+  changeStateResult = () => {
+    this.setState({
+      menuOpen: true,
+      resultOpen: false,
+      userID: null,
+      user: null,
+      measureID: null,
     })
   };
 
@@ -33,8 +47,16 @@ class App extends Component {
           </h3>
         </header>
         <div className="App-body">
-          <Menu state={this.state} changeState={this.changeState}/>
-          <Results state={this.state} changeState={this.changeState}/>
+          {this.state.menuOpen ? (
+            <Menu state={this.state} changeState={this.changeStateMenu}/>
+          ) : (
+            null
+          )}
+          {this.state.resultOpen ? (
+            <Results state={this.state} changeState={this.changeStateResult}/>
+          ) : (
+            null
+          )}
         </div>
       </div>
     );

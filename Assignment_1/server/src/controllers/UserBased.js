@@ -32,7 +32,7 @@ exports.Euclidean = (req, res) => {
 
           let tempObj = {
             UserID: usersCsv[i].UserID,
-            Euclidean: +euclidean.toFixed(3),
+            score: +euclidean.toFixed(3),
           };
 
           if (euclidean !== 0) {
@@ -45,9 +45,9 @@ exports.Euclidean = (req, res) => {
         return res.status(404).json({ message: 'No Euclidean matches', });
       }
 
-      console.log(euclideanArr);
+      euclideanArr.sort((a, b) => b.score - a.score);
 
-      return res.json({ Euclidean: euclideanArr });
+      return res.json({ score: euclideanArr.slice(0, 3) });
     });
   }).catch((err) => {
     return res.status(500).json({ message: 'Something went wrong. Please try again!', data: err });
@@ -74,7 +74,7 @@ exports.Pearson = (req, res) => {
 
           let tempObj = {
             UserID: usersCsv[i].UserID,
-            Pearson: +pearson.toFixed(3),
+            score: +pearson.toFixed(3),
           };
 
           if (pearson !== 0) {
@@ -87,9 +87,9 @@ exports.Pearson = (req, res) => {
         return res.status(404).json({ message: 'No Pearson matches', });
       }
 
-      console.log(pearsonArr);
+      pearsonArr.sort((a, b) => b.score - a.score);
 
-      return res.json({ Pearson: pearsonArr });
+      return res.json({ score: pearsonArr.slice(0, 3) });
     });
   }).catch((err) => {
     return res.status(500).json({ message: 'Something went wrong. Please try again!', data: err });
