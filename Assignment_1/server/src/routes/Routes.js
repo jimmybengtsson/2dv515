@@ -17,4 +17,13 @@ module.exports = (app) => {
   app.route('/ratings')
     .get(items.GetRatings);
 
+  app.route('/items')
+    .get(items.getMovies);
+
+  app.route('/items/euclidean')
+    .post(items.Euclidean);
+
+  app.route('/items/pearson')
+    .post(items.Pearson);
+
 };
