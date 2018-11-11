@@ -8,7 +8,6 @@ exports.GetUsers = (req, res) => {
       return res.status(500).json({ message: 'Server failed. Please try again!' });
     }
 
-    console.log(data);
     return res.json({ users: data });
   });
 };
@@ -36,8 +35,6 @@ const getSimilarity = (req, res, similarityPattern) => {
     };
 
     fetchCSV.ratings().then((ratingsCsv) => {
-
-      console.log(usersCsv);
 
       for (let i = 0; i < usersCsv.length; i++) {
 
