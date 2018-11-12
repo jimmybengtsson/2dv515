@@ -14,12 +14,22 @@ exports.GetRatings = (req, res) => {
 
 exports.Euclidean = (req, res) => {
 
-  return getSimilarity(req, res, 'euclidean');
+  getSimilarity(req, res, 'euclidean').then((result) => {
+
+    return res.json(result);
+  }).catch((err) => {
+    return res.status(500).json({ message: 'Something went wrong. Please try again!', data: err });
+  });
 };
 
 exports.Pearson = (req, res) => {
 
-  return getSimilarity(req, res, 'pearson');
+  getSimilarity(req, res, 'pearson').then((result) => {
+
+    return res.json(result);
+  }).catch((err) => {
+    return res.status(500).json({ message: 'Something went wrong. Please try again!', data: err });
+  });
 
 };
 
@@ -44,139 +54,46 @@ exports.getMovies = (req, res) => {
   });
 };
 
-const transposeToMovies = () => {
-
-  return new Promise((resolve, reject)  => {
-
-    fetchCSV.ratings().then((data) => {
-
-      let tempMovies = [];
-      let tempArr = [];
-
-      for (let i = 0; i < data.length; i++) {
-
-        if (tempMovies.indexOf(data[i].Movie) < 0) {
-          tempMovies.push(data[i].Movie);
-        }
-
-      }
-
-      for (let i = 0; i < tempMovies.length; i++) {
-
-        let tempObj = {
-          movie: tempMovies[i],
-          ratings: [],
-          movieID: i,
-        };
-
-        for (let j = 0; j < data.length; j++) {
-
-          if (tempMovies[i] === data[j].Movie) {
-            let ratingObj = {
-              userID: data[j].UserID,
-              Rating: data[j].Rating,
-              movieID: i,
-            };
-            tempObj.ratings.push(ratingObj);
-          }
-
-        }
-
-        tempArr.push(tempObj);
-      }
-
-      console.log(tempArr);
-      resolve(tempArr);
-    }).catch(err => {
-      reject(err);
-    });
-  });
-};
-
 const getSimilarity = (req, res, similarityPattern) => {
 
-  fetchCSV.users().then((usersCsv) => {
+    if (typeof localStorage === 'undefined' || localStorage === null) {
+      let LocalStorage = require('node-localstorage').LocalStorage;
+      localStorage = new LocalStorage('./scratch');
+    }
 
-    let movie = req.body.Movie;
-    let resObj = {
-      users: [],
-      movies: [],
-    };
+    return new Promise((resolve, reject)  => {
 
-    fetchCSV.ratings().then((ratingsCsv) => {
+      let movie = req.body.Movie;
+      let resObj = {
+        users: [],
+        movies: [],
+      };
 
-      let tempMovies = [];
+      let storage = JSON.parse(localStorage.getItem('ItemBased-DataSet'));
 
-      for (let i = 0; i < ratingsCsv.length; i++) {
+      for (let i = 0; i < storage.length; i++) {
+        if (storage[i].Movie === movie && similarityPattern === 'euclidean') {
 
-        if (ratingsCsv[i].Movie !== movie && tempMovies.indexOf(ratingsCsv[i].Movie) < 0) {
+          resObj.users = storage[i].Euclidean.users;
+          resObj.movies = storage[i].Euclidean.movies;
 
-          let pattern;
+        } else if (storage[i].Movie === movie && similarityPattern === 'pearson') {
 
-          if (similarityPattern === 'pearson') {
-            pattern = algorithms.itemPearson(movie, ratingsCsv[i].Movie, ratingsCsv);
-          }
-
-          if (similarityPattern === 'euclidean') {
-            pattern = algorithms.itemEuclidean(movie, ratingsCsv[i].Movie, ratingsCsv);
-          }
-
-          let tempObj = {
-            movie: ratingsCsv[i].Movie,
-            score: +pattern.toFixed(3),
-          };
-
-          if (pattern !== 0) {
-            resObj.movies.push(tempObj);
-          }
-
-          tempMovies.push(ratingsCsv[i].Movie);
+          resObj.users = storage[i].Pearson.users;
+          resObj.movies = storage[i].Pearson.movies;
         }
       }
 
-      if (resObj.movies <= 0) {
-        return res.status(404).json({ message: 'No matches', });
-      }
+      console.log({
+        message: 'Dataset was sent at ' + new Date(),
+        pattern: similarityPattern,
+        movie: movie,
+        result: resObj,
+      });
 
-      resObj.movies.sort((a, b) => b.score - a.score);
-
-      let tempArr = [];
-
-      for (let i = 0; i < usersCsv.length; i++) {
-        let sum = 0;
-        let similarity = 0;
-
-        for (let j = 0; j < ratingsCsv.length; j++) {
-          if (ratingsCsv[j].Movie !== movie && usersCsv[i].UserID === ratingsCsv[j].UserID) {
-            for (let u = 0; u < resObj.movies.length; u++) {
-              if (ratingsCsv[j].Movie === resObj.movies[u].movie) {
-                sum += resObj.movies[u].score * ratingsCsv[j].Rating;
-                similarity += resObj.movies[u].score;
-              }
-            }
-          }
-        }
-
-        sum = sum / similarity;
-
-        let tempObj = {
-          UserID: usersCsv[i].UserID,
-          score: sum.toFixed(3),
-        };
-
-        console.log(tempObj);
-
-        tempArr.push(tempObj);
-      }
-
-      resObj.users = tempArr;
-      resObj.users.sort((a, b) => b.score - a.score);
       resObj.users = resObj.users.slice(0, 3);
       resObj.movies = resObj.movies.slice(0, 3);
-      return res.json(resObj);
 
+      resolve(resObj);
     });
-  }).catch((err) => {
-    return res.status(500).json({ message: 'Something went wrong. Please try again!', data: err });
-  });
-};
+  };

@@ -3,6 +3,12 @@
 let express = require('express');
 let cors = require('cors');
 let bodyParser = require('body-parser');
+let genDataSet = require('./src/controllers/GenerateDataSet');
+
+genDataSet.itemBased();
+setInterval(() => {
+  genDataSet.itemBased();
+}, 300000);
 
 let app = express();
 let port = process.env.PORT || 8000;

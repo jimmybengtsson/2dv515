@@ -152,8 +152,6 @@ class Menu extends Component {
 
     Promise.all([getUsers(), getMovies()]).then((result) => {
 
-      console.log(result[0].data.users);
-      console.log(result[1].data.ratings);
       this.setState({
         users: result[0].data.users,
         movies: result[1].data.ratings
@@ -164,7 +162,6 @@ class Menu extends Component {
   };
 
   render() {
-    console.log(this.state)
     return (
       <div className="Menu">
         <div className="Menu-Body">

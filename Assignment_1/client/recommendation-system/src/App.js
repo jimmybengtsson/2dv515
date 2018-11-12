@@ -11,6 +11,7 @@ class App extends Component {
     this.state = {
       userID: null,
       user: null,
+      movie: null,
       menuOpen: true,
       resultOpen: false,
     }
@@ -39,6 +40,7 @@ class App extends Component {
       userID: null,
       user: null,
       measureID: null,
+      movie: null,
     })
   };
 

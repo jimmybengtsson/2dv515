@@ -70,7 +70,6 @@ exports.itemEuclidean = (movieA, movieB, ratings) => {
     return 0;
   }
 
-  console.log(sim);
   return 1 / (1 + sim);
 };
 

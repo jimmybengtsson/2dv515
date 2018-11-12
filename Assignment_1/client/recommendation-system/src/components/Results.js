@@ -26,7 +26,7 @@ class Results extends Component {
         getEuclidean(this.props.state.userID).then(result => {
           this.setState({
             result: result.data,
-            measure: 'Euclidean'
+            measure: 'User - Euclidean'
           })
         }).catch(err => {
           console.log(err);
@@ -36,7 +36,7 @@ class Results extends Component {
         getPearson(this.props.state.userID).then(result => {
           this.setState({
             result: result.data,
-            measure: 'Pearson'
+            measure: 'User - Pearson'
           })
         }).catch(err => {
           console.log(err);
@@ -46,7 +46,7 @@ class Results extends Component {
         getItemEuclidean(this.props.state.movie).then(result => {
           this.setState({
             result: result.data,
-            measure: 'Euclidean'
+            measure: 'Item - Euclidean'
           })
         }).catch(err => {
           console.log(err);
@@ -56,7 +56,7 @@ class Results extends Component {
         getItemPearson(this.props.state.movie).then(result => {
           this.setState({
             result: result.data,
-            measure: 'Pearson'
+            measure: 'Item - Pearson'
           })
         }).catch(err => {
           console.log(err);
@@ -70,7 +70,6 @@ class Results extends Component {
   renderResult = () => {
 
     let userArr = [];
-    console.log(this.state.result)
 
     for (let i in this.state.result.users) {
       for (let j in this.props.state.users) {
@@ -94,6 +93,7 @@ class Results extends Component {
       measure: this.state.measure,
       time: executionTime,
       user: this.props.state.user,
+      movie: this.props.state.movie
     }
 
     let storage;
@@ -104,11 +104,12 @@ class Results extends Component {
       storage = [];
     }
 
-    storage.push(timeObj);
+    storage.unshift(timeObj);
+
+    storage = storage.slice(0, 20);
 
     localStorage.setItem('TimeResults', JSON.stringify(storage));
 
-    console.log(userArr)
 
     if (this.props.state.measureID === 1 || this.props.state.measureID === 2) {
 
