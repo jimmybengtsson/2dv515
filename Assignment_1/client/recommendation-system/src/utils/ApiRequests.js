@@ -20,6 +20,15 @@ export const getRatings = () => {
   })
 }
 
+export const getMovies = () => {
+
+  return axios({
+    method: 'get',
+    url: serverURL + 'items',
+    headers: {'Content-Type': 'application/json'}
+  })
+}
+
 export const getEuclidean = (data) => {
   let tempObj = {
     UserID: data,
@@ -41,6 +50,32 @@ export const getPearson = (data) => {
   return axios({
     method: 'post',
     url: serverURL + 'users/pearson',
+    data: JSON.stringify(tempObj),
+    headers: {'Content-Type': 'application/json'}
+  })
+}
+
+export const getItemEuclidean = (data) => {
+  let tempObj = {
+    Movie: data,
+  }
+
+  return axios({
+    method: 'post',
+    url: serverURL + 'items/euclidean',
+    data: JSON.stringify(tempObj),
+    headers: {'Content-Type': 'application/json'}
+  })
+}
+
+export const getItemPearson = (data) => {
+  let tempObj = {
+    Movie: data,
+  }
+
+  return axios({
+    method: 'post',
+    url: serverURL + 'items/pearson',
     data: JSON.stringify(tempObj),
     headers: {'Content-Type': 'application/json'}
   })

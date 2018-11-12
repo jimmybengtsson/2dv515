@@ -23,6 +23,8 @@ class App extends Component {
       userID: data.userID,
       user: data.user,
       users: data.users,
+      movie: data.movie,
+      movies: data.movies,
       measureID: data.measureID,
       menuOpen: false,
       resultOpen: true,

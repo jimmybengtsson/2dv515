@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {getEuclidean, getPearson} from '../utils/ApiRequests';
+import {getEuclidean, getPearson, getItemEuclidean, getItemPearson} from '../utils/ApiRequests';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -34,6 +34,26 @@ class Results extends Component {
         break;
       case 2:
         getPearson(this.props.state.userID).then(result => {
+          this.setState({
+            result: result.data,
+            measure: 'Pearson'
+          })
+        }).catch(err => {
+          console.log(err);
+        })
+        break;
+      case 3:
+        getItemEuclidean(this.props.state.movie).then(result => {
+          this.setState({
+            result: result.data,
+            measure: 'Euclidean'
+          })
+        }).catch(err => {
+          console.log(err);
+        })
+        break;
+      case 4:
+        getItemPearson(this.props.state.movie).then(result => {
           this.setState({
             result: result.data,
             measure: 'Pearson'
@@ -88,60 +108,118 @@ class Results extends Component {
 
     localStorage.setItem('TimeResults', JSON.stringify(storage));
 
-    console.log(storage)
+    console.log(userArr)
 
-    return (
-      <div>
-        <p>Top three matches for {this.props.state.user} ({this.state.measure})</p>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell numeric> </TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell numeric>Score</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {userArr.map(row => {
-              return (
-                <TableRow key={row.id}>
-                  <TableCell numericcomponent="th" scope="row">
-                    {row.position}
-                  </TableCell>
-                  <TableCell>{row.user}</TableCell>
-                  <TableCell numeric>{row.score}</TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-        <br/>
-        <p>Top three recommendations for {this.props.state.user} ({this.state.measure})</p>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell numeric> </TableCell>
-              <TableCell>Movie</TableCell>
-              <TableCell numeric>Score</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {movieArr.map((row, index) => {
-              return (
-                <TableRow key={row.id}>
-                  <TableCell numeric>
-                    {index + 1}
-                  </TableCell>
-                  <TableCell>{row.movie}</TableCell>
-                  <TableCell numeric>{row.score}</TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-        <p>Execution time: {executionTime}ms</p>
-      </div>
-    );
+    if (this.props.state.measureID === 1 || this.props.state.measureID === 2) {
+
+      return (
+        <div>
+          <p>Top three matches for {this.props.state.user} ({this.state.measure})</p>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell numeric> </TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell numeric>Score</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {userArr.map(row => {
+                return (
+                  <TableRow key={row.id}>
+                    <TableCell numericcomponent="th" scope="row">
+                      {row.position}
+                    </TableCell>
+                    <TableCell>{row.user}</TableCell>
+                    <TableCell numeric>{row.score}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+          <br/>
+          <p>Top three recommendations for {this.props.state.user} ({this.state.measure})</p>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell numeric> </TableCell>
+                <TableCell>Movie</TableCell>
+                <TableCell numeric>Score</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {movieArr.map((row, index) => {
+                return (
+                  <TableRow key={row.id}>
+                    <TableCell numeric>
+                      {index + 1}
+                    </TableCell>
+                    <TableCell>{row.movie}</TableCell>
+                    <TableCell numeric>{row.score}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+          <p>Execution time: {executionTime}ms</p>
+        </div>
+      );
+    } else if (this.props.state.measureID === 3 || this.props.state.measureID === 4) {
+
+      console.log(this.props.state)
+      return (
+        <div>
+          <p>Top three matching items for {this.props.state.movie} ({this.state.measure})</p>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell numeric> </TableCell>
+                <TableCell>Movie</TableCell>
+                <TableCell numeric>Score</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {movieArr.map((row, index) => {
+                return (
+                  <TableRow key={row.id}>
+                    <TableCell numeric>
+                      {index + 1}
+                    </TableCell>
+                    <TableCell>{row.movie}</TableCell>
+                    <TableCell numeric>{row.score}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+          <br/>
+          <p>Recommended critics for {this.props.state.Movie} ({this.state.measure})</p>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell numeric> </TableCell>
+                <TableCell>User</TableCell>
+                <TableCell numeric>Score</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {userArr.map((row, index) => {
+                return (
+                  <TableRow key={row.id}>
+                    <TableCell numericcomponent="th" scope="row">
+                      {row.position}
+                    </TableCell>
+                    <TableCell>{row.user}</TableCell>
+                    <TableCell numeric>{row.score}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+          <p>Execution time: {executionTime}ms</p>
+        </div>
+      );
+    }
   }
 
   componentDidMount() {

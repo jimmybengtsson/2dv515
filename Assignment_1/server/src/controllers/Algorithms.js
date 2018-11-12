@@ -84,7 +84,9 @@ exports.itemPearson = (movieA, movieB, ratings) => {
   let n = 0;
 
   for (let i = 0; i < ratings.length; i++) {
+
     for (let j = 0; j < ratings.length; j++) {
+
       if (ratings[i].Movie === movieA && ratings[j].Movie === movieB && ratings[i].UserID === ratings[j].UserID) {
         sumOne += Number(ratings[i].Rating);
         sumTwo += Number(ratings[j].Rating);

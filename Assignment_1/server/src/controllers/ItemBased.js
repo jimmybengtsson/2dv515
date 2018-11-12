@@ -105,9 +105,11 @@ const getSimilarity = (req, res, similarityPattern) => {
 
     fetchCSV.ratings().then((ratingsCsv) => {
 
+      let tempMovies = [];
+
       for (let i = 0; i < ratingsCsv.length; i++) {
 
-        if (ratingsCsv[i].Movie !== movie) {
+        if (ratingsCsv[i].Movie !== movie && tempMovies.indexOf(ratingsCsv[i].Movie) < 0) {
 
           let pattern;
 
@@ -127,6 +129,8 @@ const getSimilarity = (req, res, similarityPattern) => {
           if (pattern !== 0) {
             resObj.movies.push(tempObj);
           }
+
+          tempMovies.push(ratingsCsv[i].Movie);
         }
       }
 
@@ -136,25 +140,16 @@ const getSimilarity = (req, res, similarityPattern) => {
 
       resObj.movies.sort((a, b) => b.score - a.score);
 
-      let tempUsers = [];
       let tempArr = [];
 
       for (let i = 0; i < usersCsv.length; i++) {
-
-        if (tempUsers.indexOf(ratingsCsv[i].UserID) < 0) {
-          tempUsers.push(ratingsCsv[i].UserID);
-        }
-
-      }
-
-      for (let i = 0; i < tempUsers.length; i++) {
         let sum = 0;
         let similarity = 0;
 
         for (let j = 0; j < ratingsCsv.length; j++) {
-          if (ratingsCsv[j].Movie !== movie && tempUsers[i] === ratingsCsv[j].UserID) {
+          if (ratingsCsv[j].Movie !== movie && usersCsv[i].UserID === ratingsCsv[j].UserID) {
             for (let u = 0; u < resObj.movies.length; u++) {
-              if (ratingsCsv[j].Movie === resObj.movies[u].UserID) {
+              if (ratingsCsv[j].Movie === resObj.movies[u].movie) {
                 sum += resObj.movies[u].score * ratingsCsv[j].Rating;
                 similarity += resObj.movies[u].score;
               }
@@ -165,26 +160,17 @@ const getSimilarity = (req, res, similarityPattern) => {
         sum = sum / similarity;
 
         let tempObj = {
-          user: ratingsCsv[i].UserID,
+          UserID: usersCsv[i].UserID,
           score: sum.toFixed(3),
         };
+
+        console.log(tempObj);
 
         tempArr.push(tempObj);
       }
 
-      /*for (let i = 0; i < ratingsCsv.length; i++) {
-        if (ratingsCsv[i].Movie === movie) {
-          for (let j = 0; j < tempArr.length; j++) {
-            if (ratingsCsv[i].UserID === tempArr[j].UserID) {
-              tempArr.splice(j, 1);
-            }
-          }
-        }
-      }
-
-      resObj.movies = tempArr;*/
-      console.log(resObj);
-      resObj.movies.sort((a, b) => b.score - a.score);
+      resObj.users = tempArr;
+      resObj.users.sort((a, b) => b.score - a.score);
       resObj.users = resObj.users.slice(0, 3);
       resObj.movies = resObj.movies.slice(0, 3);
       return res.json(resObj);
