@@ -80,3 +80,29 @@ export const getItemPearson = (data) => {
     headers: {'Content-Type': 'application/json'}
   })
 }
+
+export const getIBEuclidean = (data) => {
+  let tempObj = {
+    UserID: data,
+  }
+
+  return axios({
+    method: 'post',
+    url: serverURL + 'users/ib-euclidean',
+    data: JSON.stringify(tempObj),
+    headers: {'Content-Type': 'application/json'}
+  })
+}
+
+export const getIBPearson = (data) => {
+  let tempObj = {
+    UserID: data,
+  }
+
+  return axios({
+    method: 'post',
+    url: serverURL + 'users/ib-pearson',
+    data: JSON.stringify(tempObj),
+    headers: {'Content-Type': 'application/json'}
+  })
+}

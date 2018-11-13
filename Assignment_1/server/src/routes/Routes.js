@@ -26,4 +26,10 @@ module.exports = (app) => {
   app.route('/items/pearson')
     .post(items.Pearson);
 
+  app.route('/users/ib-euclidean')
+    .post(items.IBEuclidean);
+
+  app.route('/users/ib-pearson')
+    .post(items.IBPearson);
+
 };

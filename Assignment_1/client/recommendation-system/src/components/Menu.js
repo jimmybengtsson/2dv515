@@ -46,6 +46,8 @@ class Menu extends Component {
         return this.renderMovieMenu();
       case 5:
         return this.renderUserMenu();
+      case 6:
+        return this.renderUserMenu();
       default:
         return null;
     }
@@ -63,7 +65,7 @@ class Menu extends Component {
           >
             {this.state.users.map((item, index) => {
               return (
-                <MenuItem value={item} >{item.UserName}</MenuItem>
+                <MenuItem key={index} value={item} >{item.UserName}</MenuItem>
               );
             })}
           </Select>
@@ -114,8 +116,12 @@ class Menu extends Component {
         measureID: 4
       },
       {
-        measure: 'User - Euclidean Distance',
-        measureID: 1,
+        measure: 'User IB CF - Euclidean Distance',
+        measureID: 5,
+      },
+      {
+        measure: 'User IB CF - Pearson Correlation',
+        measureID: 6,
       },
     ]
     return (
@@ -129,7 +135,7 @@ class Menu extends Component {
               >
                 {menuArr.map((item, index) => {
                   return (
-                    <MenuItem value={item} >{item.measure}</MenuItem>
+                    <MenuItem key={index} value={item} >{item.measure}</MenuItem>
                   );
                 })}
               </Select>

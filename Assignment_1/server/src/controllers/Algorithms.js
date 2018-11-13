@@ -164,6 +164,72 @@ exports.getSimilarity = (name, similarityPattern, typeOne, typeTwo) => {
   });
 };
 
+exports.getIBRecommendations = (userID, similarityPattern) => {
+
+  let user = userID;
+  let ratedArr = [];
+  let tempArr = [];
+  let resArr = [];
+
+  return fetchCSV.ratings().then((ratings) => {
+
+    for (let i = 0; i < ratings.length; i++) {
+
+      if (ratings[i].UserID === user) {
+        ratedArr.push(ratings[i]);
+      }
+    }
+
+    if (typeof localStorage === 'undefined' || localStorage === null) {
+      let LocalStorage = require('node-localstorage').LocalStorage;
+      localStorage = new LocalStorage('./scratch');
+    }
+
+    let storage = JSON.parse(localStorage.getItem('ItemBased-DataSet'));
+
+    for (let i = 0; i < storage.length; i++) {
+
+      if (!ratedArr.find(x => x.Movie === storage[i].Movie)) {
+        tempArr.push(storage[i]);
+      }
+    }
+
+    for (let i = 0; i < tempArr.length; i++) {
+
+      let sum = 0;
+      let similarity = 0;
+
+      for (let j = 0; j < ratedArr.length; j++) {
+
+        for (let k = 0; k < tempArr[i][similarityPattern].Movies.length; k++) {
+          if (tempArr[i][similarityPattern].Movies[k].Movie === ratedArr[j].Movie) {
+            sum += tempArr[i][similarityPattern].Movies[k].Score * ratedArr[j].Rating;
+            similarity += tempArr[i][similarityPattern].Movies[k].Score;
+          }
+        }
+      }
+
+      sum = sum / similarity;
+
+      let tempObj = {
+        Movie: tempArr[i].Movie,
+        Score: sum.toFixed(3),
+      };
+
+      resArr.push(tempObj);
+    }
+
+    resArr.sort((a, b) => b.Score - a.Score);
+
+    resArr = resArr.slice(0, 3);
+
+    return resArr;
+
+  }).catch((err) => {
+    return err;
+  });
+};
+
 const getUserMatches = (name, csv, ratings, typeOne, typeTwo, similarityPattern) => {
 
   let tempArr = [];

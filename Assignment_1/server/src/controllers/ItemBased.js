@@ -54,6 +54,28 @@ exports.getMovies = (req, res) => {
   });
 };
 
+exports.IBEuclidean = (req, res) => {
+
+  algorithms.getIBRecommendations(req.body.UserID, 'Euclidean').then((result) => {
+
+    return res.json(result);
+
+  }).catch((err) => {
+    return res.status(500).json({ message: 'Something went wrong. Please try again!', data: err });
+  });
+};
+
+exports.IBPearson = (req, res) => {
+
+  algorithms.getIBRecommendations(req.body.UserID, 'Pearson').then((result) => {
+
+    return res.json(result);
+
+  }).catch((err) => {
+    return res.status(500).json({ message: 'Something went wrong. Please try again!', data: err });
+  });
+};
+
 const getSimilarity = (req, res, similarityPattern) => {
 
     if (typeof localStorage === 'undefined' || localStorage === null) {

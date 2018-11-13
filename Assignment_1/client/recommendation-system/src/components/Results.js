@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {getEuclidean, getPearson, getItemEuclidean, getItemPearson} from '../utils/ApiRequests';
+import {getEuclidean, getPearson, getItemEuclidean, getItemPearson, getIBEuclidean, getIBPearson} from '../utils/ApiRequests';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -60,6 +60,26 @@ class Results extends Component {
           console.log(err);
         })
         break;
+      case 5:
+        getIBEuclidean(this.props.state.userID).then(result => {
+          this.setState({
+            result: result.data,
+            measure: 'User IB - Euclidean'
+          })
+        }).catch(err => {
+          console.log(err);
+        })
+        break;
+      case 6:
+        getIBPearson(this.props.state.userID).then(result => {
+          this.setState({
+            result: result.data,
+            measure: 'User IB - Pearson'
+          })
+        }).catch(err => {
+          console.log(err);
+        })
+        break;
       default:
         return;
     }
@@ -68,21 +88,27 @@ class Results extends Component {
   renderResult = () => {
 
     let userArr = [];
+    let movieArr = [];
 
-    for (let i in this.state.result.Users) {
-      for (let j in this.props.state.users) {
-        if (this.props.state.users[j].UserID === this.state.result.Users[i].UserID) {
-          let tempObj = {
-            user: this.props.state.users[j].UserName,
-            score: this.state.result.Users[i].Score,
-            position: Number(i) + 1,
+    if (this.state.result.Users) {
+
+      for (let i in this.state.result.Users) {
+        for (let j in this.props.state.users) {
+          if (this.props.state.users[j].UserID === this.state.result.Users[i].UserID) {
+            let tempObj = {
+              user: this.props.state.users[j].UserName,
+              score: this.state.result.Users[i].Score,
+              position: Number(i) + 1,
+            }
+            userArr.push(tempObj)
           }
-          userArr.push(tempObj)
         }
       }
-    }
 
-    let movieArr = this.state.result.Movies;
+      movieArr = this.state.result.Movies;
+    } else {
+      movieArr = this.state.result;
+    }
 
     let stopTime = new Date();
     let executionTime = stopTime - this.props.state.startTime;
@@ -118,7 +144,7 @@ class Results extends Component {
             <TableBody>
               {userArr.map(row => {
                 return (
-                  <TableRow key={row.id}>
+                  <TableRow key={row.position}>
                     <TableCell numericcomponent="th" scope="row">
                       {row.position}
                     </TableCell>
@@ -135,7 +161,7 @@ class Results extends Component {
             <TableBody>
               {movieArr.map((row, index) => {
                 return (
-                  <TableRow key={row.id}>
+                  <TableRow key={index}>
                     <TableCell numeric>
                       {index + 1}
                     </TableCell>
@@ -146,12 +172,12 @@ class Results extends Component {
               })}
             </TableBody>
           </Table>
+          <br/>
           <p>Execution time: {executionTime}ms</p>
         </div>
       );
     } else if (this.props.state.measureID === 3 || this.props.state.measureID === 4) {
 
-      console.log(this.props.state)
       return (
         <div>
           <p>Top three matching items for {this.props.state.movie} ({this.state.measure})</p>
@@ -187,6 +213,31 @@ class Results extends Component {
               })}
             </TableBody>
           </Table>
+          <br/>
+          <p>Execution time: {executionTime}ms</p>
+        </div>
+      );
+    } else if (this.props.state.measureID === 5 || this.props.state.measureID === 6) {
+
+      return (
+        <div>
+          <p>Top three recommendations for {this.props.state.user} ({this.state.measure})</p>
+          <Table>
+            <TableBody>
+              {movieArr.map((row, index) => {
+                return (
+                  <TableRow key={index}>
+                    <TableCell numeric>
+                      {index + 1}
+                    </TableCell>
+                    <TableCell>{row.Movie}</TableCell>
+                    <TableCell numeric>{row.Score}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+          <br/>
           <p>Execution time: {executionTime}ms</p>
         </div>
       );
