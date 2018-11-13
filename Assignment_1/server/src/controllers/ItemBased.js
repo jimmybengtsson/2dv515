@@ -65,8 +65,8 @@ const getSimilarity = (req, res, similarityPattern) => {
 
       let movie = req.body.Movie;
       let resObj = {
-        users: [],
-        movies: [],
+        Users: [],
+        Movies: [],
       };
 
       let storage = JSON.parse(localStorage.getItem('ItemBased-DataSet'));
@@ -74,25 +74,25 @@ const getSimilarity = (req, res, similarityPattern) => {
       for (let i = 0; i < storage.length; i++) {
         if (storage[i].Movie === movie && similarityPattern === 'euclidean') {
 
-          resObj.users = storage[i].Euclidean.users;
-          resObj.movies = storage[i].Euclidean.movies;
+          resObj.Users = storage[i].Euclidean.Users;
+          resObj.Movies = storage[i].Euclidean.Movies;
 
         } else if (storage[i].Movie === movie && similarityPattern === 'pearson') {
 
-          resObj.users = storage[i].Pearson.users;
-          resObj.movies = storage[i].Pearson.movies;
+          resObj.Users = storage[i].Pearson.Users;
+          resObj.Movies = storage[i].Pearson.Movies;
         }
       }
 
-      console.log({
-        message: 'Dataset was sent at ' + new Date(),
-        pattern: similarityPattern,
-        movie: movie,
-        result: resObj,
-      });
+      resObj.Users = resObj.Users.slice(0, 3);
+      resObj.Movies = resObj.Movies.slice(0, 3);
 
-      resObj.users = resObj.users.slice(0, 3);
-      resObj.movies = resObj.movies.slice(0, 3);
+      console.log({
+        Message: 'Dataset was sent at ' + new Date(),
+        Movie: movie,
+        Pattern: similarityPattern,
+        Result: resObj,
+      });
 
       resolve(resObj);
     });
