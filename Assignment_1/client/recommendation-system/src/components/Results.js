@@ -4,10 +4,8 @@ import {getEuclidean, getPearson, getItemEuclidean, getItemPearson} from '../uti
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import '../App.css';
-const perf = require('execution-time')();
 
 class Results extends Component {
   constructor (props) {
@@ -71,12 +69,12 @@ class Results extends Component {
 
     let userArr = [];
 
-    for (let i in this.state.result.users) {
+    for (let i in this.state.result.Users) {
       for (let j in this.props.state.users) {
-        if (this.props.state.users[j].UserID === this.state.result.users[i].UserID) {
+        if (this.props.state.users[j].UserID === this.state.result.Users[i].UserID) {
           let tempObj = {
             user: this.props.state.users[j].UserName,
-            score: this.state.result.users[i].score,
+            score: this.state.result.Users[i].Score,
             position: Number(i) + 1,
           }
           userArr.push(tempObj)
@@ -84,7 +82,7 @@ class Results extends Component {
       }
     }
 
-    let movieArr = this.state.result.movies;
+    let movieArr = this.state.result.Movies;
 
     let stopTime = new Date();
     let executionTime = stopTime - this.props.state.startTime;
@@ -117,13 +115,6 @@ class Results extends Component {
         <div>
           <p>Top three matches for {this.props.state.user} ({this.state.measure})</p>
           <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell numeric> </TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell numeric>Score</TableCell>
-              </TableRow>
-            </TableHead>
             <TableBody>
               {userArr.map(row => {
                 return (
@@ -141,13 +132,6 @@ class Results extends Component {
           <br/>
           <p>Top three recommendations for {this.props.state.user} ({this.state.measure})</p>
           <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell numeric> </TableCell>
-                <TableCell>Movie</TableCell>
-                <TableCell numeric>Score</TableCell>
-              </TableRow>
-            </TableHead>
             <TableBody>
               {movieArr.map((row, index) => {
                 return (
@@ -155,8 +139,8 @@ class Results extends Component {
                     <TableCell numeric>
                       {index + 1}
                     </TableCell>
-                    <TableCell>{row.movie}</TableCell>
-                    <TableCell numeric>{row.score}</TableCell>
+                    <TableCell>{row.Movie}</TableCell>
+                    <TableCell numeric>{row.Score}</TableCell>
                   </TableRow>
                 );
               })}
@@ -172,13 +156,6 @@ class Results extends Component {
         <div>
           <p>Top three matching items for {this.props.state.movie} ({this.state.measure})</p>
           <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell numeric> </TableCell>
-                <TableCell>Movie</TableCell>
-                <TableCell numeric>Score</TableCell>
-              </TableRow>
-            </TableHead>
             <TableBody>
               {movieArr.map((row, index) => {
                 return (
@@ -186,8 +163,8 @@ class Results extends Component {
                     <TableCell numeric>
                       {index + 1}
                     </TableCell>
-                    <TableCell>{row.movie}</TableCell>
-                    <TableCell numeric>{row.score}</TableCell>
+                    <TableCell>{row.Movie}</TableCell>
+                    <TableCell numeric>{row.Score}</TableCell>
                   </TableRow>
                 );
               })}
@@ -196,13 +173,6 @@ class Results extends Component {
           <br/>
           <p>Recommended critics for {this.props.state.Movie} ({this.state.measure})</p>
           <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell numeric> </TableCell>
-                <TableCell>User</TableCell>
-                <TableCell numeric>Score</TableCell>
-              </TableRow>
-            </TableHead>
             <TableBody>
               {userArr.map((row, index) => {
                 return (

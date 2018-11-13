@@ -8,7 +8,7 @@ exports.GetUsers = (req, res) => {
       return res.status(500).json({ message: 'Server failed. Please try again!' });
     }
 
-    return res.json({ users: data });
+    return res.json({ Users: data });
   });
 };
 

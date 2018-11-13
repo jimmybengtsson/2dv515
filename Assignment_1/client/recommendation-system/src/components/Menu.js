@@ -44,6 +44,8 @@ class Menu extends Component {
         return this.renderMovieMenu();
       case 4:
         return this.renderMovieMenu();
+      case 5:
+        return this.renderUserMenu();
       default:
         return null;
     }
@@ -110,7 +112,11 @@ class Menu extends Component {
       {
         measure: 'Movie - Pearson Correlation',
         measureID: 4
-      }
+      },
+      {
+        measure: 'User - Euclidean Distance',
+        measureID: 1,
+      },
     ]
     return (
           <div>
@@ -153,8 +159,8 @@ class Menu extends Component {
     Promise.all([getUsers(), getMovies()]).then((result) => {
 
       this.setState({
-        users: result[0].data.users,
-        movies: result[1].data.ratings
+        users: result[0].data.Users,
+        movies: result[1].data.Movies
       });
     }).catch((err) => {
       console.log(err);

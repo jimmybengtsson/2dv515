@@ -5,7 +5,7 @@ exports.GetRatings = (req, res) => {
 
   fetchCSV.ratings().then((data) => {
 
-    return res.json({ ratings: data });
+    return res.json({ Ratings: data });
 
   }).catch(err => {
     console.log(err);
@@ -47,7 +47,7 @@ exports.getMovies = (req, res) => {
 
     }
 
-    return res.json({ ratings: tempMovies });
+    return res.json({ Movies: tempMovies });
 
   }).catch(err => {
     console.log(err);
