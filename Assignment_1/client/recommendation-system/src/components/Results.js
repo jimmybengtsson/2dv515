@@ -197,7 +197,7 @@ class Results extends Component {
             </TableBody>
           </Table>
           <br/>
-          <p>Recommended critics for {this.props.state.Movie} ({this.state.measure})</p>
+          <p>Recommended critics for {this.props.state.movie} ({this.state.measure})</p>
           <Table>
             <TableBody>
               {userArr.map((row, index) => {
@@ -251,7 +251,7 @@ class Results extends Component {
   render() {
     return (
       <div className="Results">
-        <button className="Results-Close" aria-label="Close" onClick={() => {this.props.changeState()}}>
+        <button className="Results-Close" onClick={() => {this.props.changeState()}}>
           X
         </button>
           {this.state.result ? (
