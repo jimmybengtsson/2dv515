@@ -1,8 +1,14 @@
 let fetchCSV = require('./FetchCSV');
 let algorithms = require('./Algorithms');
 
+/**
+ *  Creates an object with all movies movie-matches and user-recommendations
+ *  and adds the to local storage
+ */
 exports.itemBased = () => {
 
+    // Fetch all rated movies from the ratings-csv and sort
+    // to a list where all movies are included once.
     fetchCSV.ratings().then((data) => {
 
       let tempMovies = [];
@@ -17,6 +23,7 @@ exports.itemBased = () => {
 
       for (let i = 0; i < tempMovies.length; i++) {
 
+        // Generate matches and recommendations for each movie in the ratings-csv.
         Promise.all([generateData(tempMovies[i], 'euclidean'), generateData(tempMovies[i], 'pearson')]).then((result) => {
           let tempObj = {
             Movie: tempMovies[i],
@@ -26,13 +33,13 @@ exports.itemBased = () => {
 
           tempArr.push(tempObj);
 
+          // Data are added to local storage when last movie in array.
           if (i + 1 === tempMovies.length) {
             if (typeof localStorage === 'undefined' || localStorage === null) {
               let LocalStorage = require('node-localstorage').LocalStorage;
               localStorage = new LocalStorage('./scratch');
             }
 
-            console.log(tempArr);
             localStorage.setItem('ItemBased-DataSet', JSON.stringify(tempArr));
             console.log({
               Message: 'New dataset generated at ' + new Date(),
@@ -44,8 +51,14 @@ exports.itemBased = () => {
     }).catch(err => {
       return err;
     });
-};
+  };
 
+/**
+ *  Get all movie-matches and user-recommendations for
+ *  a specific movie and algorithm.
+ *
+ *  @returns Promise with top 3 matching movies and recommended users that will be added to dataset.
+ */
 const generateData = (movie, similarityPattern) => {
 
   return new Promise((resolve, reject)  => {

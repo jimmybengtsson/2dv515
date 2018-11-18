@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-let serverURL = 'http://109.228.145.167:8008/'
+let serverURL = 'http://localhost:8000/'
 
 export const getUsers = () => {
 

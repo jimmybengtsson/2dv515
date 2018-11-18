@@ -1,5 +1,13 @@
+'use strict';
+
+// Import files
 let fetchCSV = require('./FetchCSV');
 
+/**
+ *  Calculate the Euclidean distance between 2 users or movies/items.
+ *
+ *  @returns Euclidean distance score.
+ */
 const Euclidean = (dataA, dataB, ratings,  typeOne, typeTwo) => {
 
   let sim = 0;
@@ -21,6 +29,11 @@ const Euclidean = (dataA, dataB, ratings,  typeOne, typeTwo) => {
   return 1 / (1 + sim);
 };
 
+/**
+ *  Calculate the Pearson correlation between 2 users or movies/items.
+ *
+ *  @returns Pearson correlation score.
+ */
 const Pearson = (dataA, dataB, ratings,  typeOne, typeTwo) => {
 
   let sumOne = 0;
@@ -53,10 +66,17 @@ const Pearson = (dataA, dataB, ratings,  typeOne, typeTwo) => {
   return num / den;
 };
 
+/**
+ *  Get all matches and recommendations for
+ *  a specific movie/user and algorithm.
+ *
+ *  @returns Promise with all matches and recommendations for a user or movie.
+ */
 exports.getSimilarity = (name, similarityPattern, typeOne, typeTwo) => {
 
   return new Promise((resolve, reject) => {
 
+    // Fetch all users from the users-csv
     fetchCSV.users().then((usersCsv) => {
 
       let resObj = {
@@ -64,8 +84,10 @@ exports.getSimilarity = (name, similarityPattern, typeOne, typeTwo) => {
         Movies: [],
       };
 
+      // Fetch all rating from the ratings-csv
       fetchCSV.ratings().then((ratingsCsv) => {
 
+        // If a user will be compared...
         if (typeOne === 'UserID') {
 
           resObj.Users = getUserMatches(name, usersCsv, ratingsCsv, typeOne, typeTwo, similarityPattern);
@@ -118,6 +140,7 @@ exports.getSimilarity = (name, similarityPattern, typeOne, typeTwo) => {
 
           resObj.Movies = tempArr;
 
+          // If a movie will be compared...
         } else if (typeOne === 'Movie') {
 
           resObj.Movies = getItemMatches(name, ratingsCsv, ratingsCsv, typeOne, typeTwo, similarityPattern);
@@ -164,6 +187,11 @@ exports.getSimilarity = (name, similarityPattern, typeOne, typeTwo) => {
   });
 };
 
+/**
+ *  Get item-based recommendations for a specific user.
+ *
+ *  @returns Array of recommended movies.
+ */
 exports.getIBRecommendations = (userID, similarityPattern) => {
 
   let user = userID;
@@ -230,6 +258,12 @@ exports.getIBRecommendations = (userID, similarityPattern) => {
   });
 };
 
+/**
+ *  Get all user-matches for a specific user by using
+ *  euclidean distance or pearson correlation.
+ *
+ *  @returns Array of user-matches.
+ */
 const getUserMatches = (name, csv, ratings, typeOne, typeTwo, similarityPattern) => {
 
   let tempArr = [];
@@ -262,6 +296,12 @@ const getUserMatches = (name, csv, ratings, typeOne, typeTwo, similarityPattern)
   return tempArr;
 };
 
+/**
+ *  Get all matches for a specific movie/item by using
+ *  euclidean distance or pearson correlation.
+ *
+ *  @returns Array of matches.
+ */
 const getItemMatches = (name, csv, ratings, typeOne, typeTwo, similarityPattern) => {
 
   let tempArr = [];

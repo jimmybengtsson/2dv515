@@ -1,5 +1,9 @@
 'use strict';
 
+/**
+ *  Bind the different express-routes to their functions
+ */
+
 module.exports = (app) => {
 
   let users = require('../controllers/UserBased');
