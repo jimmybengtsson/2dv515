@@ -1,14 +1,16 @@
 import React, {Component} from 'react'
 import Button from '@material-ui/core/Button';
-import MenuTwo from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import '../App.css';
 
-import {getUsers, getMovies, getEuclidean} from '../utils/ApiRequests'
+import {getUsers, getMovies} from '../utils/ApiRequests'
 
+/**
+ *  Menu-class where user can pick similarity patterns by user or movie.
+ */
 class Menu extends Component {
   constructor (props) {
     super(props)
@@ -17,22 +19,28 @@ class Menu extends Component {
       users: null,
       user: '',
       measure: '',
-      movie: null,
+      movie: '',
     }
   }
 
-  handleChange = (event) => {
-    this.setState({ userID: event.target.value.UserID, user: event.target.value.UserName.toString(), chosenOne: true }, );
+  /**
+   *  Handle all state changes when menu items are chosen.
+   */
+  handleChangeUsers = (event) => {
+    this.setState({ userID: event.target.value.UserID, user: event.target.value.UserName, chosenOne: true });
   };
 
-  handleChangeTwo = event => {
-    this.setState({ measure: event.target.value.measure, measureID: event.target.value.measureID, chosenTwo: true, chosenOne: false});
+  handleChangeRecommendation = event => {
+    this.setState(() => ({ measure: event.target.value.measure, measureID: event.target.value.measureID, chosenTwo: true, chosenOne: false}));
   };
 
   handleChangeMovies = (event) => {
     this.setState({ movie: event.target.value, chosenOne: true});
   };
 
+  /**
+   *  Render user or movie menu depending on state
+   */
   renderMenu = () => {
 
     switch(this.state.measureID) {
@@ -53,16 +61,21 @@ class Menu extends Component {
     }
   };
 
+  /**
+   *  Render user menu
+   */
   renderUserMenu = () => {
     return (
       <div>
-        <FormControl style={{minWidth: 150}}>
-          <InputLabel  style={{minWidth: 100}} htmlFor="pick-user-simple">Pick a user</InputLabel>
+        <FormControl style={{minWidth: 200}}>
+          <InputLabel >Pick a user</InputLabel>
           <Select
-            style={{minWidth: 100}}
             value={this.state.user}
-            onChange={this.handleChange}
+            onChange={this.handleChangeUsers}
           >
+            <MenuItem value="" disabled>
+              <em>Select user</em>
+            </MenuItem>
             {this.state.users.map((item, index) => {
               return (
                 <MenuItem key={index} value={item} >{item.UserName}</MenuItem>
@@ -74,17 +87,22 @@ class Menu extends Component {
     );
   }
 
+  /**
+   *  Render movie menu
+   */
   renderMovieMenu = () => {
 
     return (
       <div>
-        <FormControl style={{minWidth: 150}}>
-          <InputLabel  style={{minWidth: 100}} htmlFor="pick-user-simple">Pick a movie</InputLabel>
+        <FormControl style={{minWidth: 200}}>
+          <InputLabel >Pick a movie</InputLabel>
           <Select
-            style={{minWidth: 100}}
             value={this.state.user}
             onChange={this.handleChangeMovies}
           >
+            <MenuItem value="" disabled>
+              <em>Select movie</em>
+            </MenuItem>
             {this.state.movies.map((item, index) => {
               return (
                 <MenuItem value={item} >{item}</MenuItem>
@@ -96,8 +114,12 @@ class Menu extends Component {
     );
   }
 
+  /**
+   *  Render menu for similarity patterns
+   */
   renderRecommendation = () => {
 
+    console.log(this.state.measure)
     let menuArr = [
       {
         measure: 'User - Euclidean Distance',
@@ -125,14 +147,16 @@ class Menu extends Component {
       },
     ]
     return (
-          <div>
-            <FormControl style={{minWidth: 150}}>
-              <InputLabel  style={{minWidth: 100}} htmlFor="pick-user-simple">Similarity measure</InputLabel>
+          <form>
+            <FormControl style={{minWidth: 200}}>
+              <InputLabel htmlFor="pick-user-simple">Similarity pattern</InputLabel>
               <Select
-                style={{minWidth: 100}}
                 value={this.state.measure}
-                onChange={this.handleChangeTwo}
+                onChange={this.handleChangeRecommendation}
               >
+                <MenuItem value="" disabled>
+                  <em>Select pattern</em>
+                </MenuItem>
                 {menuArr.map((item, index) => {
                   return (
                     <MenuItem key={index} value={item} >{item.measure}</MenuItem>
@@ -140,10 +164,13 @@ class Menu extends Component {
                 })}
               </Select>
             </FormControl>
-          </div>
+          </form>
     );
   };
 
+  /**
+   *  Render button. Not clickable if not pattern and user/movie is chosen in menu
+   */
   renderButton = () => {
     if (!this.state.chosenOne || !this.state.chosenTwo) {
       return (
@@ -160,6 +187,9 @@ class Menu extends Component {
     );
   }
 
+  /**
+   *  Make request to server for all users and movies before rendering the component.
+   */
   componentWillMount = () => {
 
     Promise.all([getUsers(), getMovies()]).then((result) => {

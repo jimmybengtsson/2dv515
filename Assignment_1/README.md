@@ -22,3 +22,5 @@ Make sure you have Node.js and NPM installed.
 + Run `npm install` to install all dependencies.
 
 + Start a development server by typing `npm start` and then open [http://localhost:3000](http://localhost:3000) to see the app.
+
++ To create a production build, use `npm run build`.

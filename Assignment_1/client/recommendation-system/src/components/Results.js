@@ -7,6 +7,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import '../App.css';
 
+/**
+ *  Result class where the similarity results are rendered.
+ */
+
 class Results extends Component {
   constructor (props) {
     super(props)
@@ -17,6 +21,10 @@ class Results extends Component {
 
   }
 
+  /**
+   *  Depending on chosen similarity pattern, a http-request are made to the
+   *  server to fetch the result which is saved in this.state.
+   */
   getResult = () => {
 
     switch(this.props.state.measureID) {
@@ -85,6 +93,9 @@ class Results extends Component {
     }
   }
 
+  /**
+   *  Depending on chosen similarity pattern, the result is rendered to the user.
+   */
   renderResult = () => {
 
     let userArr = [];
@@ -110,6 +121,7 @@ class Results extends Component {
       movieArr = this.state.result;
     }
 
+    // Execution time is measured and rendered to the user
     let stopTime = new Date();
     let executionTime = stopTime - this.props.state.startTime;
 
@@ -120,6 +132,7 @@ class Results extends Component {
       movie: this.props.state.movie
     }
 
+    // The latest 20 execution times are saved to local storage.
     let storage;
 
     if (localStorage.getItem('TimeResults')) {
@@ -248,6 +261,9 @@ class Results extends Component {
     this.getResult();
   }
 
+  /**
+   *  A circular progress is shown until server response is received.
+   */
   render() {
     return (
       <div className="Results">

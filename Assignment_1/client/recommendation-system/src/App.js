@@ -3,6 +3,9 @@ import './App.css';
 import Menu from './components/Menu';
 import Results from './components/Results';
 
+/**
+ *  Starting point of the application
+ */
 class App extends Component {
   constructor (props) {
     super(props)
@@ -17,6 +20,7 @@ class App extends Component {
 
   }
 
+  // Change state when menu is closed
   changeStateMenu = data => {
 
     this.setState({
@@ -32,17 +36,23 @@ class App extends Component {
     })
   };
 
+  // Change state when result is closed
   changeStateResult = () => {
     this.setState({
       menuOpen: true,
       resultOpen: false,
       userID: null,
       user: null,
+      users: null,
       measureID: null,
       movie: null,
+      movies: null,
+      startTime: null,
     })
   };
 
+  // When this.state.menuOpen is true menu will be rendered.
+  // When this.state.resultOpen is true results will be rendered.
   render() {
     return (
       <div className="App">
