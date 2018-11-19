@@ -177,7 +177,6 @@ exports.getSimilarity = (name, similarityPattern, typeOne, typeTwo) => {
 
         resObj.Users.sort((a, b) => b.Score - a.Score);
         resObj.Movies.sort((a, b) => b.Score - a.Score);
-        console.log(resObj);
         resolve(resObj);
 
       });

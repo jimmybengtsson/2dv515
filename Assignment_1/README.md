@@ -3,6 +3,11 @@
 Repo for a recommendation system done for assignment 1 in the course 2DV515 at Linnaeus University.
 The system itself is designed from a client/server architectural perspective, and the client and server are designed to run separately.
 
+## Deployed versions
+
+[Client](http://109.228.145.167:5000/)
+[Server](http://109.228.145.167:8008/)
+
 ## Installation
 
 Make sure you have Node.js and NPM installed.
