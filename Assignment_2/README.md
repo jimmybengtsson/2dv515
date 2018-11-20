@@ -1,13 +1,4 @@
-# 2dv515 - Assignment 1
-
-Repo for a recommendation system done for assignment 1 in the course 2DV515 at Linnaeus University.
-The system itself is designed from a client/server architectural perspective, and the client and server are designed to run separately.
-
-## Deployed versions
-
-~~[Client]()~~
-
-~~[Server]()~~
+# 2dv515 - Assignment 2
 
 ## Installation
 

@@ -23,7 +23,7 @@
 .App-body {
   background-color: white;
   min-height: 90vh;
-  max-width: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
